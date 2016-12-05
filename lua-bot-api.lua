@@ -1039,7 +1039,7 @@ local function onCallbackQueryReceive(CallbackQuery) end
 E.onCallbackQueryReceive = onCallbackQueryReceive
 
 local function onUnknownTypeReceive(unknownType)
-  print("new unknownType!")
+  --print("new unknownType!")
 end
 E.onUnknownTypeReceive = onUnknownTypeReceive
 
@@ -1100,11 +1100,14 @@ local function parseUpdateCallbacks(update)
   end
 end
 
-local function run(limit, timeout)
+local function run(update_func, limit, timeout)
   if limit == nil then limit = 1 end
   if timeout == nil then timeout = 0 end
   local offset = 0
+  local dt = os.clock()
+  local users_online = require "users.users_online"
   while true do 
+
     local updates = M.getUpdates(offset, limit, timeout)
     if(updates) then
       if (updates.result) then
@@ -1114,6 +1117,12 @@ local function run(limit, timeout)
         end
       end
     end
+    
+    if update_func then
+      update_func(os.clock() - dt)
+    end
+    users_online.update_users(os.clock() - dt)
+    dt = os.clock()
   end
 end
 
