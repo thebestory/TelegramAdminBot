@@ -42,7 +42,7 @@ new_menu:add_command("Уйти", function(user)
         local args = {...}
         local code = tonumber(args[1])
         if code == nil then
-            user:send_message("Возможно, ты ошибься, попробуй заново\nМур")
+            user:send_message("Возможно, ты ошибься, попробуй заново")
             return
         end
         
@@ -72,7 +72,7 @@ new_menu:add_command("Уйти", function(user)
         elseif not user.cash.password then
           local pass = tostring(select(1, ...))
           if pass == nil or #pass > 20 then
-            user:send_message("Ты что-то ввел не так, попробуй заново, милый")
+            user:send_message("Ты что-то ввел не так, попробуй заново")
             return
           end
           user.cash.password = pass

@@ -3,6 +3,7 @@ local all_states = require "users.users_state"
 local keyboard = { {"Создай_код_сучка", "Покажи_рабов"}, {"Сохранить_рабов", "Удали_раба", "Статус", "Верни_обратно"}}
 local my_admins = require "data_control.data_control"
 local log = require("log.log")()
+local user_online = require "users.users_online"
 
 god_work:add_command('/start', 
   function(user)
@@ -17,6 +18,7 @@ god_work:add_command("/default", function(user, ...)
       local id = tonumber(args[1])
       if id then
         my_admins.delete_admin(id)
+        user_online.block_user(id)
         user:send_message("Если был раб, то его уже нет <3")
         user.cash.delete = nil
         return

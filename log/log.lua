@@ -32,7 +32,7 @@ function log.bot_worked()
   minutes = math.floor(minutes) % 60
   hours = math.floor(hours) % 24
   days = math.floor(days)
-  send("Я тут тружусь уже " .. days .. " дней, " .. hours .. " часов, " .. minutes .. " минут, " .. seconds .. " секкунд без отдыха, котики\nМогли бы и помочь девушке!")
+  send("Я тут тружусь уже " .. days .. " дней, " .. hours .. " часов, " .. minutes .. " минут, " .. seconds .. " секкунд без отдыха")
 end
 
 

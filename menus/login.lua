@@ -4,7 +4,7 @@ local all_states = require "users.users_state"
 local keyboard = { {"Уйти"} } 
 local keyboard_again = { {"Под_новым", "Под_старым"}, {"Уйти"}}
 local const = require "const_lib.constants"
-
+local user_online = require "users.users_online"
 
 login:add_command("/start", 
   function(user) 
@@ -44,13 +44,13 @@ login:add_command("Под_старым",
       return
     end
     user:set_markup(keyboard)
-    user:send_message("Отлично, потому что ты нравишься мне таким, какой ты есть\nНо все же может это не ты? Что если твоя девушка хочет прочесть нашу переписку?\nПрошу, введи пароль правильно, и тогда мы будем вместе, Мур <3")
+    user:send_message("Тогда я попрошу тебя ввести пароль")
     user.cash.again = nil
   end)
 
 login:add_command("/default", function(user, ...) 
     if user.cash.again then
-      user:send_message("Милый, ты делаешь что-то не так :(")
+      user:send_message("Ты делаешь что-то не так :(")
     end
     
     if not user.cash.name then
@@ -69,8 +69,12 @@ login:add_command("/default", function(user, ...)
       end
       local temp = my_admins.check_admin(user.cash.name, pass, user.id)
       if (temp) then
-        user.cash.acc = {id = temp, name = user.cash.name}
-        user:set_state(all_states.WORK)
+        if (user_online.is_online(temp)) then
+          user:send_message("Прости, но ты уже в онлайне. Если это не так, то сочно обратись к знающим людям")
+        else
+          user.cash.acc = {id = temp, name = user.cash.name}
+          user:set_state(all_states.WORK)
+        end
       else
         user:send_message("Ты не прошел проверку\nПрости, но мама меня учила не делиться секретами с незнакомыми людьми\nТы, конечно, можешь попробовать заново")
         user.cash.name = my_admins.find_admin_with_userid(user.id)

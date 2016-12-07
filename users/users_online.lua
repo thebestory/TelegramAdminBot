@@ -12,6 +12,29 @@ local MAX_SECONDS_ONLINE = 600
     end
   end
   
+function players_manager.block_user(id)
+  for key, val in pairs(players) do
+    if val.cash.acc then
+      if val.cash.acc.id == id then
+        players[key] = nil
+        val:block()
+      end
+    end
+  end
+end
+
+function players_manager.is_online(id)
+  for key, val in pairs(players) do
+    if val.cash.acc then
+      if val.cash.acc.id == id then
+        return true
+      end
+    end
+  end
+  return false
+end
+  
+  
   function players_manager.get_user (id)
     return players[id]
   end
