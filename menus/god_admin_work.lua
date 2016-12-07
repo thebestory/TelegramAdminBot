@@ -13,7 +13,8 @@ god_work:add_command('/start',
 god_work:add_command("/default", function(user, ...) 
     user:set_markup(keyboard)
     if (user.cash.delete) then
-      local id = tonumber(select(1, ...))
+      local args = { ... }
+      local id = tonumber(args[1])
       if id then
         my_admins.delete_admin(id)
         user:send_message("Если был раб, то его уже нет <3")

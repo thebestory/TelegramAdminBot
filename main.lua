@@ -14,7 +14,7 @@ local bot, extension = require("lua-bot-api").configure(token)
 local temp, log = require("log.log")()
 log(bot)
 
-temp.log("BOT ENABLED")
+temp.log("Я включен")
 
 local users_manager = require "users.user"
 users_manager.set_bot(bot)

@@ -7,8 +7,6 @@ local MAX_SECONDS_ONLINE = 600
     if user:get_online_time() < MAX_SECONDS_ONLINE then 
       return false
     else
-      user:set_markup(nil)
-      user:send_message("Ты долго мне не отвечал. Я обиделся и говорю тебе пока.")
       user:delete_user()
       return true
     end

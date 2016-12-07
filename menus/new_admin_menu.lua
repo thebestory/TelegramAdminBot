@@ -39,7 +39,8 @@ new_menu:add_command("Уйти", function(user)
   end)
     new_menu:add_command("/default", function(user, ...) 
       if not user.cash.code then
-        local code = tonumber(select(1, ...))
+        local args = {...}
+        local code = tonumber(args[1])
         if code == nil then
             user:send_message("Возможно, ты ошибься, попробуй заново\nМур")
             return
