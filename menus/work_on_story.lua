@@ -2,18 +2,8 @@ local work_menu = (require "menus.default_menu")("Work on story menu")
 local all_states = require "users.users_state"
 local work_keyboard = { {'Удалить_историю', 'Изменить_текст_истории', 'Отослать_историю'}, {'Вернуть_историю'} }
 local topics = (require "const_lib.constants").topics
-
-local function return_story()
-  
-end
-
-local function delete_story()
-  
-end
-
-local function push_story()
-  
-end
+local patch_story = require "requests.patch_story"
+local delete_story = require "requests.delete_story"
 
 
 local function get_topics_after(num, page)
@@ -48,8 +38,6 @@ end
 
 local function change_story_content(story, content)
   story.content = content
-  
-  
 end
 
 
@@ -61,7 +49,7 @@ work_menu:add_command('/start',
     user:set_inline_markup(get_topics_after(1, 1))
     user.cash.page = 1
     
-    local resp, error_code = user:send_message("На данный момент категория: ".. topics[user.cash.story_content.category])
+    local resp, error_code = user:send_message("На данный момент категория: ".. user.cash.story_content.topic.slug)
     user.cash.prev_message_id = resp.result.message_id
     user:set_markup(work_keyboard)
   end)
@@ -77,7 +65,7 @@ work_menu:add_command("/default", function(user, ...)
       user:send_inline_to_message(user.cash.prev_message_id)
       user:send_message(user.cash.story_content.content)
       user:set_inline_markup(get_topics_after((user.cash.page - 1)*6 + 1, user.cash.page))
-      local resp, error_code =  user:send_message("На данный момент категория: "..topics[user.cash.story_content.category])
+      local resp, error_code =  user:send_message("На данный момент категория: "..user.cash.story_content.topic.slug)
       user.cash.prev_message_id = resp.result.message_id
       user:set_markup(work_keyboard)
       user:send_message("История успешно изменена.")
@@ -86,7 +74,7 @@ work_menu:add_command("/default", function(user, ...)
 
 work_menu:add_command('Удалить_историю', 
   function(user, ...)
-    delete_story(user.cash.story_content)
+    delete_story(user.cash.story_content.id)
     user.cash.story_content = nil
     user:send_message("История удалена")
     user:set_state(all_states.WORK)
@@ -94,6 +82,7 @@ work_menu:add_command('Удалить_историю',
 
 work_menu:add_command('Отослать_историю',
   function(user, ...)
+    patch_story(user.cash.story_content.id, user.cash.story_content.content, user.cash.story_content.topic.slug, true)
     user.cash.story_content = nil
     user:send_message("История отослана")
     user:set_state(all_states.WORK)
@@ -102,7 +91,7 @@ work_menu:add_command('Отослать_историю',
 
 work_menu:add_command('Вернуть_историю', 
   function(user, ...)
-    return_story(user.cash.story_content)
+    user.cash.story_content = nil
     user:send_message("История возвращена")
     user:set_state(all_states.WORK)
   end)

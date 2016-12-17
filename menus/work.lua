@@ -1,10 +1,25 @@
 local work_menu = (require "menus.default_menu")("Work menu")
 local all_states = require "users.users_state"
 local work_keyboard = { {"Новая_история" } , {"Уйти"}}
-
+local consts = require "const_lib.constants"
+local get_story_lib = require "requests.get_story"
 
 local function get_story()
-  return { content = "hellow world!", category = 1 }
+  local temp = get_story_lib(consts.last_message_id)
+  if temp == nil then
+    if consts.last_message_id == nil then
+      return nil
+    else
+      consts.last_message_id = nil
+      temp = get_story_lib(consts.last_message_id)
+    end
+  end
+  
+  if temp ~= nil then
+    consts.last_message_id = temp.id
+  end
+  
+  return temp
 end
 
 
@@ -26,7 +41,11 @@ work_menu:add_command("Уйти", function(user, ...)
 work_menu:add_command("Новая_история", 
   function(user, ...)
     user.cash.story_content = get_story()
-    user:set_state(all_states.WORK_ON_STORY)
+    if (user.cash.story_content == nil) then
+      user:send_message("К сожалению, пока что нет истории нуждающихся в проверке\nПриходи через некоторое время")
+    else
+      user:set_state(all_states.WORK_ON_STORY)
+    end
   end)
 
 
