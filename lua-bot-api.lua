@@ -158,6 +158,7 @@ end
 
 M.downloadFile = downloadFile
 
+
 local function generateReplyKeyboardMarkup(keyboard, resize_keyboard, one_time_keyboard, selective)
 
   if not keyboard then return nil, "keyboard not specified" end
@@ -170,12 +171,28 @@ local function generateReplyKeyboardMarkup(keyboard, resize_keyboard, one_time_k
   response.one_time_keyboard = one_time_keyboard
   response.selective = selective
 
-
+  --inline_keyboard
   local responseString = JSON:encode(response)
   return responseString
 end
 
 M.generateReplyKeyboardMarkup = generateReplyKeyboardMarkup
+
+
+local function generateInlineKeyboardMarkup(keyboard)
+
+  if not keyboard then return nil, "keyboard not specified" end
+  if #keyboard < 1 then return nil, "keyboard is empty" end
+
+  local response = {}
+
+  response.inline_keyboard = keyboard
+
+  local responseString = JSON:encode(response)
+  return responseString
+end
+
+M.generateInlineKeyboardMarkup = generateInlineKeyboardMarkup
 
 
 local function generateReplyKeyboardHide(hide_keyboard, selective)
@@ -804,7 +821,7 @@ local function editMessageText(chat_id, message_id, inline_message_id, text, par
   request_body.message_id = tonumber(message_id)
   request_body.inline_message_id = tostring(inline_message_id)
   request_body.text = tostring(text)
-  request_body.parse_mode = tostring(parse_mode)
+  request_body.parse_mode = (parse_mode and tostring(parse_mode)) or "" 
   request_body.disable_web_page_preview = disable_web_page_preview
   request_body.reply_markup = reply_markup
 
@@ -1039,7 +1056,7 @@ local function onCallbackQueryReceive(CallbackQuery) end
 E.onCallbackQueryReceive = onCallbackQueryReceive
 
 local function onUnknownTypeReceive(unknownType)
-  print("new unknownType!")
+  --print("new unknownType!")
 end
 E.onUnknownTypeReceive = onUnknownTypeReceive
 
@@ -1100,11 +1117,14 @@ local function parseUpdateCallbacks(update)
   end
 end
 
-local function run(limit, timeout)
+local function run(update_func, limit, timeout)
   if limit == nil then limit = 1 end
   if timeout == nil then timeout = 0 end
   local offset = 0
+  local dt = os.clock()
+  local users_online = require "users.users_online"
   while true do 
+
     local updates = M.getUpdates(offset, limit, timeout)
     if(updates) then
       if (updates.result) then
@@ -1114,6 +1134,12 @@ local function run(limit, timeout)
         end
       end
     end
+    
+    if update_func then
+      update_func(os.clock() - dt)
+    end
+    users_online.update_users(os.clock() - dt)
+    dt = os.clock()
   end
 end
 
