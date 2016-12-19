@@ -1,14 +1,13 @@
 local https = require("ssl.https")
 local ltn12 = require("ltn12")
 local JSON = require("JSON")
-local encode = require("multipart.multipart-post").encode
+
 
 local function makeRequest(id, content, topic, is_approved)
 
   local response = {}
   local url = 'https://thebestory.herokuapp.com/stories/' .. id
   local str = JSON:encode({content = content, topic = topic, is_approved = is_approved})
-  
   local temp = {
     url = url,
     method = "PATCH",
@@ -29,7 +28,6 @@ local function makeRequest(id, content, topic, is_approved)
     status = status or "0",
     body = table.concat(response or {"no response"}),
   }
-  
   return r
   
 end
