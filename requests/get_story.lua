@@ -30,7 +30,7 @@ local function makeRequest(after)
   
   
   local temp = JSON:decode(r.body)
-  return temp.data[1]
+  return (temp and temp.data and temp.data[1])
   
 end
 
