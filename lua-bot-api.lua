@@ -1129,7 +1129,7 @@ local function run(update_func, limit, timeout)
     if(updates) then
       if (updates.result) then
         for key, update in pairs(updates.result) do
-          parseUpdateCallbacks(updat+e)
+          parseUpdateCallbacks(update)
           offset = update.update_id + 1
         end
       end
