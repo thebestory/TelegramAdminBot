@@ -1,5 +1,6 @@
 local bot
 local chat_id = "-1001083753098"
+local save_time = os.time()
 
 local log = { }
 local function send(message)
@@ -24,8 +25,7 @@ function log.save_data()
 end
 
 function log.bot_worked()
-  print(os.clock())
-  local seconds = math.floor(os.clock())
+  local seconds = os.difftime(os.time(), save_time)
   local minutes = seconds/60
   local hours = minutes/60
   local days = hours/24

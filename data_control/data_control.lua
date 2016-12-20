@@ -162,7 +162,7 @@ function M.update_permission(dt)
 end
 
 function M.save_data_in_update()
-  if math.floor(os.clock() % 86400) == 0 then
+  if os.time() % 86400 == 0 then
     save_admin()
   end
 end
