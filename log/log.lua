@@ -24,6 +24,7 @@ function log.save_data()
 end
 
 function log.bot_worked()
+  print(os.clock())
   local seconds = math.floor(os.clock())
   local minutes = seconds/60
   local hours = minutes/60
