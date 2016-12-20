@@ -1121,7 +1121,7 @@ local function run(update_func, limit, timeout)
   if limit == nil then limit = 1 end
   if timeout == nil then timeout = 0 end
   local offset = 0
-  local dt = os.clock()
+  local dt = os.time()
   local users_online = require "users.users_online"
   while true do 
 
@@ -1129,17 +1129,17 @@ local function run(update_func, limit, timeout)
     if(updates) then
       if (updates.result) then
         for key, update in pairs(updates.result) do
-          parseUpdateCallbacks(update)
+          parseUpdateCallbacks(updat+e)
           offset = update.update_id + 1
         end
       end
     end
-    
+    local time = os.difftime(os.time(), dt)
     if update_func then
-      update_func(os.clock() - dt)
+      update_func(time)
     end
-    users_online.update_users(os.clock() - dt)
-    dt = os.clock()
+    users_online.update_users(time)
+    dt = os.time()
   end
 end
 
