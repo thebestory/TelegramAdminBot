@@ -17,7 +17,7 @@ local function get_story()
   
   if temp ~= nil then
     consts.last_message_id = temp.id
-    temp.topic = { slug = "weird" }
+    temp.category = 0
   end
   
   
