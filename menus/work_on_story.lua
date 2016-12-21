@@ -65,7 +65,7 @@ work_menu:add_command("/default", function(user, ...)
       user:send_inline_to_message(user.cash.prev_message_id)
       user:send_message(user.cash.story_content.content)
       user:set_inline_markup(get_topics_after((user.cash.page - 1)*6 + 1, user.cash.page))
-      local resp, error_code =  user:send_message("На данный момент категория: "..user.cash.story_content.topic.slug)
+      local resp, error_code =  user:send_message("На данный момент категория: ".. topics[user.cash.story_content.category])
       user.cash.prev_message_id = resp.result.message_id
       user:set_markup(work_keyboard)
       user:send_message("История успешно изменена.")
@@ -82,7 +82,7 @@ work_menu:add_command('Удалить_историю',
 
 work_menu:add_command('Отослать_историю',
   function(user, ...)
-    patch_story(user.cash.story_content.id, user.cash.story_content.content, user.cash.story_content.topic.slug, true)
+    patch_story(user.cash.story_content.id, user.cash.story_content.content, topics[user.cash.story_content.category], true)
     user.cash.story_content = nil
     user:send_message("История отослана")
     user:set_state(all_states.WORK)
