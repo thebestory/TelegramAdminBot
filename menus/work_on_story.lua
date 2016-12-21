@@ -48,8 +48,7 @@ work_menu:add_command('/start',
     user:send_message(user.cash.story_content.content)
     user:set_inline_markup(get_topics_after(1, 1))
     user.cash.page = 1
-    
-    local resp, error_code = user:send_message("На данный момент категория: ".. user.cash.story_content.topic.slug)
+    local resp, error_code = user:send_message("На данный момент категория: ".. topics[user.cash.story_content.category])
     user.cash.prev_message_id = resp.result.message_id
     user:set_markup(work_keyboard)
   end)
